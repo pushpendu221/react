@@ -4,6 +4,7 @@ import {
   signInWithRedirect,
   signInWithPopup,
   GoogleAuthProvider,
+  createUserWithEmailAndPassword,
 } from "firebase/auth";
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 
@@ -26,29 +27,35 @@ googleProvider.getCustomParameters({
 });
 
 export const auth = getAuth();
-export const SignInWithGooglePopup = () => signInWithPopup(auth, googleProvider);
-export const SignInWithGoogleRedirect = () => signInWithRedirect(auth, googleProvider);
+export const SignInWithGooglePopup = () =>
+  signInWithPopup(auth, googleProvider);
+export const SignInWithGoogleRedirect = () =>
+  signInWithRedirect(auth, googleProvider);
 export const db = getFirestore();
-export const CreateUserDocumentfromAuth = async (userAuth) => {
-    const userDocRef = doc(db,'users',userAuth.uid);
-    // console.log(userDocRef);
-    const userSnapsort = await getDoc(userDocRef);
-    console.log(userSnapsort);
-    console.log(userSnapsort.exists());
-    if(!userSnapsort.exists()){
-        const {displayName, email} = userAuth
-        const createdAt = new Date();
-        try {
-            await setDoc(userDocRef,{
-                displayName,
-                email,
-                createdAt
-            });
-        }  catch(err){
-            console.log("Error Adding database");
-        }
+export const CreateUserDocumentfromAuth = async (userAuth, additionalInformation = {}) => {
+  const userDocRef = doc(db, "users", userAuth.uid);
+  // console.log(userDocRef);
+  const userSnapsort = await getDoc(userDocRef);
+  console.log(userSnapsort);
+  console.log(userSnapsort.exists());
+  if (!userSnapsort.exists()) {
+    const { displayName, email } = userAuth;
+    const createdAt = new Date();
+    try {
+      await setDoc(userDocRef, {
+        displayName,
+        email,
+        createdAt,
+        ...additionalInformation
+      });
+    } catch (err) {
+      console.log("Error Adding database");
     }
-    return userDocRef;
+  }
+  return userDocRef;
 };
 
-
+export const CreateAuthUserUsingEmailAndPassword = async(email,password) => {
+  if(!email || !password) return;
+return await createUserWithEmailAndPassword(auth,email,password)
+}
