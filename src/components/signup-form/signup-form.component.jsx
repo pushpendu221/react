@@ -3,13 +3,15 @@ import {
   CreateAuthUserUsingEmailAndPassword,
   CreateUserDocumentfromAuth,
 } from "../../utils/firebase/firebase.util";
+import FormInput from "../form-input/form-input.component";
+import Button from "../button/button.component";
+import './signup-form.styles.scss';
 const defaultFormFields = {
   displayName: "",
   email: "",
   password: "",
   repassword: "",
 };
-
 const SignupForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { displayName, email, password, repassword } = formFields;
@@ -47,42 +49,45 @@ const SignupForm = () => {
   };
 
   return (
-    <div>
-      <h1> This Is Sign Up Form</h1>
+    <div className="sign-up-container">
+      <h2>I don't have an Account</h2>
+      <span> Sign up with your email and Password</span>
       <form onSubmit={handleSubmit}>
-        <label>Name</label>
-        <input
+        <FormInput
+          label="Name"
           type="text"
           onChange={eventHandler}
           value={displayName}
           name="displayName"
           required
         />
-        <label>Email</label>
-        <input
+
+        <FormInput
+          label="Email"
           type="email"
           onChange={eventHandler}
           value={email}
           name="email"
           required
         />
-        <label>Password</label>
-        <input
+        <FormInput
+          label="Password"
           type="password"
           onChange={eventHandler}
           value={password}
           name="password"
           required
         />
-        <label>Retype Password</label>
-        <input
+
+        <FormInput
+          label="Retype Password"
           type="password"
           onChange={eventHandler}
           value={repassword}
           name="repassword"
           required
         />
-        <button type="submit">Submit</button>
+        <Button children='Submit' type="submit"/>
       </form>
     </div>
   );
