@@ -1,3 +1,4 @@
+import ProductCard from '../../components/product-card/product-card.component';
 import "./category-preview.styles.scss";
 
 const CategoryPreview = ({ title, product }) => {
@@ -7,7 +8,12 @@ const CategoryPreview = ({ title, product }) => {
         <span className="title">{title.toUpperCase()}</span>
       </h2>
       <div className="preview">
-      
+      {
+        product.filter((_,indx) => indx < 4)
+        .map((product)=>(
+            <ProductCard key={product.id} product={product} />
+          ))
+      }
       </div>
     </div>
   );
