@@ -9,7 +9,7 @@ import {
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, setDoc, collection, writeBatch, WriteBatch } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -30,11 +30,25 @@ googleProvider.getCustomParameters({
 });
 
 export const auth = getAuth();
+
+
 export const SignInWithGooglePopup = () =>
   signInWithPopup(auth, googleProvider);
 export const SignInWithGoogleRedirect = () =>
   signInWithRedirect(auth, googleProvider);
 export const db = getFirestore();
+export const AddCollectionandDocument = async (collectionKey,ObjectsToAdd) => {
+const collectionRef = collection(db,collectionKey);
+const batch = writeBatch(db);
+
+ObjectsToAdd.forEach((Object)=>{
+const docRef = doc(collectionRef,Object.title.toLowerCase());
+batch.set(docRef,Object);
+});
+await batch.commit();
+console.log("Done");
+}
+
 export const CreateUserDocumentfromAuth = async (userAuth, additionalInformation = {}) => {
   const userDocRef = doc(db, "users", userAuth.uid);
   // console.log(userDocRef);
